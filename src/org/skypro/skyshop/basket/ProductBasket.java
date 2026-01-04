@@ -39,11 +39,14 @@ public class ProductBasket {
             return;
         }
 
+        int specialCount = 0;
+
         for (int i = 0; i < count; i++) {
             Product product = basket[i];
-            System.out.println(product.getProductName() + ": " + product.getProductPrice());
+            System.out.println(product.toString());
         }
         System.out.println("Итого: " + getTotalPrice());
+        System.out.println("Специальных товаров: " + specialCount);
     }
 
     // Метод проверки по имени  //

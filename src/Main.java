@@ -1,5 +1,8 @@
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.product.SimpleProduct;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -7,12 +10,12 @@ public class Main {
     public static void main(String[] args) {
 
         ProductBasket basket = new ProductBasket();
-        Product one = new Product("One", 100);
-        Product two = new Product("Two", 200);
-        Product three = new Product("Three", 300);
-        Product four = new Product("Four", 400);
-        Product five = new Product("Five", 500);
-        Product six = new Product("Six", 600);
+        SimpleProduct one = new SimpleProduct("Простой товар", 100);
+        DiscountedProduct two = new DiscountedProduct("Товар со скидкой", 200, 20);
+        FixPriceProduct three = new FixPriceProduct("Товар с фиксированной ценой");
+        DiscountedProduct four = new DiscountedProduct("Товар со скидкой", 400, 30);
+        SimpleProduct five = new SimpleProduct("Простой товар", 500);
+        SimpleProduct six = new SimpleProduct("Six", 600);
 
         //Добавляем товар в корзину//
         basket.addProduct(one);
@@ -28,7 +31,7 @@ public class Main {
 
         //Проверяем наличие по имени//
         System.out.println("Проверка наличия по имени");
-        basket.checkProductName(five.getProductName());
+        basket.checkProductName("Товар со скидкой");
         basket.checkProductName(six.getProductName());
 
         //Печать общей стоимости//
