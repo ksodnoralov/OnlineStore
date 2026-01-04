@@ -43,7 +43,10 @@ public class ProductBasket {
 
         for (int i = 0; i < count; i++) {
             Product product = basket[i];
-            System.out.println(product.toString());
+            System.out.println(product);
+            if (product.isSpecial()) {
+                specialCount++;
+            }
         }
         System.out.println("Итого: " + getTotalPrice());
         System.out.println("Специальных товаров: " + specialCount);

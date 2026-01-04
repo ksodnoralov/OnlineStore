@@ -17,6 +17,5 @@ public abstract class Product {
 
     public abstract boolean isSpecial();
 
-    @Override
     public abstract String toString();
 }
