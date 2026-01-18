@@ -2,7 +2,10 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.content.Article;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.search.SearchEngine;
+import java.util.Arrays;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -42,5 +45,48 @@ public class Main {
         System.out.println("Очистка корзины");
         basket.clearBasket();
         basket.printBasketInfo();
-    }
+
+    // Создаем поисковый движок
+    SearchEngine searchEngine = new SearchEngine(10);
+
+    // Добавляем товары в поисковый движок
+        searchEngine.add(one);
+        searchEngine.add(two);
+        searchEngine.add(three);
+        searchEngine.add(four);
+        searchEngine.add(five);
+
+    // Создаем статьи
+    Article article1 = new Article("Статья о простых товарах",
+            "Простые товары не имеют скидок и фиксированных цен.");
+    Article article2 = new Article("Все о скидках",
+            "Товары со скидкой помогают экономить деньги.");
+    Article article3 = new Article("Фиксированные цены",
+            "Товары с фиксированной ценой всегда стоят одинаково.");
+
+    // Добавляем статьи в поисковый движок
+        searchEngine.add(article1);
+        searchEngine.add(article2);
+        searchEngine.add(article3);
+
+        System.out.println("\n1. Поиск товара 'Товар со скидкой':");
+        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("Товар со скидкой")));
+
+        System.out.println("\n2. Поиск по слову 'фиксированной':");
+        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("фиксированной")));
+
+        System.out.println("\n3. Поиск статьи 'скидках':");
+        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("скидках")));
+
+        System.out.println("\n4. Поиск по слову 'Six':");
+        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("Six")));
+
+        System.out.println("\n5. Поиск несуществующего 'компьютер':");
+        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("компьютер")));
+
+    // Демонстрация метода getStringRepresentation()
+        System.out.println("\n6. Представление объектов:");
+        System.out.println("Товар: " + one.getStringRepresentation());
+        System.out.println("Статья: " + article1.getStringRepresentation());
+}
 }
