@@ -68,6 +68,55 @@ public class SearchEngine {
     public int getCount() {
         return count;
     }
+
+    // Метод для поиска наиболее подходящего объекта
+    public Searchable findBestMatch(String search) throws BestResultNotFoundException {
+        if (search == null || search.trim().isEmpty()) {
+            throw new BestResultNotFoundException(search);
+        }
+
+        Searchable bestMatch = null;
+        int maxCount = 0;
+        String searchLower = search.toLowerCase();
+
+        for (int i = 0; i < count; i++) {
+            Searchable item = searchables[i];
+            if (item == null) {
+                continue;
+            }
+
+            String searchTerm = item.getSearchTerm();
+            if (searchTerm != null) {
+                String termLower = searchTerm.toLowerCase();
+                int countMatches = countSubstringOccurrences(termLower, searchLower);
+
+                if (countMatches > maxCount) {
+                    maxCount = countMatches;
+                    bestMatch = item;
+                }
+            }
+        }
+
+        if (bestMatch == null) {
+            throw new BestResultNotFoundException(search);
+        }
+
+        return bestMatch;
+    }
+
+    //Вспомогательный метод
+    private int countSubstringOccurrences(String str, String substring) {
+        int count = 0;
+        int index = 0;
+
+        while ((index = str.indexOf(substring, index)) != -1) {
+            count++;
+            index += substring.length();
+        }
+
+        return count;
+    }
+
 }
 
 
