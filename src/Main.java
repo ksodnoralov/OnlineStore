@@ -8,6 +8,7 @@ import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.search.BestResultNotFoundException;
 import org.skypro.skyshop.search.SearchEngine;
 import java.util.Arrays;
+import java.util.List;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -70,6 +71,43 @@ public class Main {
         basket.addProduct(five);
         basket.addProduct(six);
 
+        //Удаляем существующий продукт //
+        System.out.println("Удаление продукта 'Товар со скидкой':");
+        List<Product> removedProducts = basket.removeProductByName("Товар со скидкой");
+
+        System.out.println("Удаленные продукты (всего " + removedProducts.size() + "):");
+        for (Product product : removedProducts) {
+            System.out.println("  - " + product);
+        }
+
+        System.out.println("Содержимое корзины после удаления:");
+        basket.printBasketInfo();
+
+        //Удаляем существующий продукт //
+        System.out.println("Удаление продукта 'Простой товар':");
+        removedProducts = basket.removeProductByName("Простой товар");
+
+        System.out.println("Удаленные продукты (всего " + removedProducts.size() + "):");
+        for (Product product : removedProducts) {
+            System.out.println("  - " + product);
+        }
+
+        System.out.println("Содержимое корзины после удаления:");
+        basket.printBasketInfo();
+
+        //Удаляем несуществующий продукт //
+        System.out.println("Удаление несуществующего продукта 'Несуществующий товар':");
+        removedProducts = basket.removeProductByName("Несуществующий товар");
+
+        if (removedProducts.isEmpty()) {
+            System.out.println("Список пуст - товар не найден");
+        } else {
+            System.out.println("Удаленные продукты:");
+            for (Product product : removedProducts) {
+                System.out.println("  - " + product);
+            }
+        }
+
         //Печатаем содержимое корзины//
         System.out.println("Содержимое корзины:");
         basket.printBasketInfo();
@@ -96,6 +134,7 @@ public class Main {
         searchEngine.add(three);
         searchEngine.add(four);
         searchEngine.add(five);
+        searchEngine.add(six);
 
         // Создаем статьи
         Article article1 = new Article("Статья о простых товарах",
@@ -160,39 +199,48 @@ public class Main {
 
         //Обычный поиск//
         System.out.println("1. Поиск товара 'Товар со скидкой':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("Товар со скидкой")));
+        List<Searchable> results = searchEngine.search("Товар со скидкой");
+        System.out.println("Найдено результатов: " + results.size());
+        for (int i = 0; i < results.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + results.get(i));
+        }
 
         System.out.println("2. Поиск по слову 'фиксированной':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("фиксированной")));
+        results = searchEngine.search("фиксированной");
+        System.out.println("Найдено результатов: " + results.size());
+        for (Searchable item : results) {
+            System.out.println("  - " + item.getStringRepresentation());
+        }
 
         System.out.println("3. Поиск статьи 'скидках':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("скидках")));
+        results = searchEngine.search("скидках");
+        System.out.println("Найдено результатов: " + results.size());
+        for (Searchable item : results) {
+            System.out.println("  - " + item);
+        }
 
         System.out.println("4. Поиск по слову 'Six':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("Six")));
+        results = searchEngine.search("Six");
+        System.out.println("Найдено результатов: " + results.size());
+        if (!results.isEmpty()) {
+            System.out.println("Первый результат: " + results.get(0));
+        }
 
         System.out.println("5. Поиск несуществующего 'компьютер':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("компьютер")));
+        results = searchEngine.search("компьютер");
+        System.out.println("Найдено результатов: " + results.size());
+        if (results.isEmpty()) {
+            System.out.println("Ничего не найдено");
+        }
 
         // Демонстрация метода getStringRepresentation()
         System.out.println("6. Представление объектов:");
         System.out.println("Товар: " + one.getStringRepresentation());
         System.out.println("Статья: " + article1.getStringRepresentation());
+        System.out.println("Всего объектов в поисковом движке: " + searchEngine.getCount());
+        System.out.println("Всего товаров в корзине (после очистки): " + basket.getCount());
 
-        System.out.println("1. Поиск товара 'Товар со скидкой':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("Товар со скидкой")));
 
-        System.out.println("2. Поиск по слову 'фиксированной':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("фиксированной")));
-
-        System.out.println("3. Поиск статьи 'скидках':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("скидках")));
-
-        System.out.println("4. Поиск по слову 'Six':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("Six")));
-
-        System.out.println("5. Поиск несуществующего 'компьютер':");
-        System.out.println("Результаты: " + Arrays.toString(searchEngine.search("компьютер")));
 
         // Демонстрация метода getStringRepresentation()
         System.out.println("6. Представление объектов:");
