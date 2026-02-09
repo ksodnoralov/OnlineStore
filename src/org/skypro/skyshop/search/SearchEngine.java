@@ -4,6 +4,8 @@ import org.skypro.skyshop.content.Searchable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngine {
 
@@ -27,18 +29,18 @@ public class SearchEngine {
     }
 
     // Метод поиска
-    public List<Searchable> search(String query) {
+    public Map<String, Searchable> search(String query) {
         if (query == null || query.trim().isEmpty()) {
             System.out.println("Пустой запрос поиска");
-            return new LinkedList<>();
+            return new TreeMap<>();
         }
 
-        List<Searchable> results = new LinkedList<>();
+        Map<String, Searchable> results = new TreeMap<>();
 
         for (Searchable item : searchables) {
             String searchTerm = item.getSearchTerm();
             if (searchTerm != null && searchTerm.toLowerCase().contains(query.toLowerCase())) {
-                results.add(item);
+                results.put(item.getName(), item);
                 }
             }
         System.out.println("По запросу '" + query + "' найдено: " + results.size() + " результатов");
@@ -48,6 +50,7 @@ public class SearchEngine {
 
     // Метод для получения количества добавленных элементов
     public int getCount() {
+
         return searchables.size();
     }
 

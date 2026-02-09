@@ -9,6 +9,7 @@ import org.skypro.skyshop.search.BestResultNotFoundException;
 import org.skypro.skyshop.search.SearchEngine;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -199,23 +200,26 @@ public class Main {
 
         //Обычный поиск//
         System.out.println("1. Поиск товара 'Товар со скидкой':");
-        List<Searchable> results = searchEngine.search("Товар со скидкой");
+        Map<String, Searchable> results = searchEngine.search("Товар со скидкой");
         System.out.println("Найдено результатов: " + results.size());
-        for (int i = 0; i < results.size(); i++) {
-            System.out.println("  " + (i + 1) + ". " + results.get(i));
+        int count1 = 1;
+        for (Searchable item : results.values()) {
+
+            System.out.println("  " + count1 + ". " + item);
+            count1++;
         }
 
         System.out.println("2. Поиск по слову 'фиксированной':");
         results = searchEngine.search("фиксированной");
         System.out.println("Найдено результатов: " + results.size());
-        for (Searchable item : results) {
+        for (Searchable item : results.values()) {
             System.out.println("  - " + item.getStringRepresentation());
         }
 
         System.out.println("3. Поиск статьи 'скидках':");
         results = searchEngine.search("скидках");
         System.out.println("Найдено результатов: " + results.size());
-        for (Searchable item : results) {
+        for (Searchable item : results.values()) {
             System.out.println("  - " + item);
         }
 
@@ -223,7 +227,7 @@ public class Main {
         results = searchEngine.search("Six");
         System.out.println("Найдено результатов: " + results.size());
         if (!results.isEmpty()) {
-            System.out.println("Первый результат: " + results.get(0));
+            System.out.println("Первый результат: " + results.values().iterator().next());
         }
 
         System.out.println("5. Поиск несуществующего 'компьютер':");
