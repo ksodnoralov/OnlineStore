@@ -7,9 +7,9 @@ import org.skypro.skyshop.content.Article;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.search.BestResultNotFoundException;
 import org.skypro.skyshop.search.SearchEngine;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -200,10 +200,10 @@ public class Main {
 
         //Обычный поиск//
         System.out.println("1. Поиск товара 'Товар со скидкой':");
-        Map<String, Searchable> results = searchEngine.search("Товар со скидкой");
+        Set<Searchable> results = searchEngine.search("Товар со скидкой");
         System.out.println("Найдено результатов: " + results.size());
         int count1 = 1;
-        for (Searchable item : results.values()) {
+        for (Searchable item : results) {
 
             System.out.println("  " + count1 + ". " + item);
             count1++;
@@ -212,14 +212,14 @@ public class Main {
         System.out.println("2. Поиск по слову 'фиксированной':");
         results = searchEngine.search("фиксированной");
         System.out.println("Найдено результатов: " + results.size());
-        for (Searchable item : results.values()) {
+        for (Searchable item : results) {
             System.out.println("  - " + item.getStringRepresentation());
         }
 
         System.out.println("3. Поиск статьи 'скидках':");
         results = searchEngine.search("скидках");
         System.out.println("Найдено результатов: " + results.size());
-        for (Searchable item : results.values()) {
+        for (Searchable item : results) {
             System.out.println("  - " + item);
         }
 
@@ -227,7 +227,7 @@ public class Main {
         results = searchEngine.search("Six");
         System.out.println("Найдено результатов: " + results.size());
         if (!results.isEmpty()) {
-            System.out.println("Первый результат: " + results.values().iterator().next());
+            System.out.println("Первый результат: " + results.iterator().next());
         }
 
         System.out.println("5. Поиск несуществующего 'компьютер':");
@@ -244,11 +244,5 @@ public class Main {
         System.out.println("Всего объектов в поисковом движке: " + searchEngine.getCount());
         System.out.println("Всего товаров в корзине (после очистки): " + basket.getCount());
 
-
-
-        // Демонстрация метода getStringRepresentation()
-        System.out.println("6. Представление объектов:");
-        System.out.println("Товар: " + one.getStringRepresentation());
-        System.out.println("Статья: " + article1.getStringRepresentation());
     }
 }
