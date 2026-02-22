@@ -2,51 +2,53 @@ package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ProductBasket {
 
-    private List<Product> basket;
+    private Map<String, List<Product>> basket;
     private int count;
 
     public ProductBasket() {
-        this.basket = new LinkedList<>();
+        this.basket = new HashMap<>();
         this.count = 0;
     }
 
     // Метод добавления продукта в корзину //
     public void addProduct(Product product) {
-        basket.add(product);
+        basket.computeIfAbsent(product.getProductName(), k -> new ArrayList<>())
+                .add(product);
         count++;
         System.out.println("Товар добавлен: " + product.getProductName());
     }
 
     // Метод удаления продукта по имени //
     public List<Product> removeProductByName(String name) {
-        List<Product> removedProducts = new LinkedList<>();
+        List<Product> removedProducts = basket.remove(name);
 
-        Iterator<Product> iterator = basket.iterator();
-        while (iterator.hasNext()) {
-            Product product = iterator.next();
-            if (product.getProductName().equals(name)) {
-                removedProducts.add(product);
-                iterator.remove();
-                count--;
-            }
+        if (removedProducts != null) {
+            count -= removedProducts.size();
+            return removedProducts;
         }
-        return removedProducts;
+        return new ArrayList<>();
     }
 
     // Метод получения стоимости корзины //
     public int getTotalPrice() {
-        int total = 0;
-        for (Product product : basket) {
-            total = total + product.getProductPrice();
-        }
+        int total = basket.values().stream()
+                .flatMap(List::stream)
+                .mapToInt(Product::getProductPrice)
+                .sum();
         System.out.println("Стоимость корзины: " + total);
         return total;
+    }
+
+    // Метод для подсчета специальных товаров //
+    private long getSpecialCount() {
+        return basket.values().stream()
+                .flatMap(List::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     // Метод печати содержимого корзины //
@@ -55,29 +57,28 @@ public class ProductBasket {
             System.out.println("В корзине пусто");
             return;
         }
+        basket.values().stream()
+                .flatMap(List::stream)
+                .forEach(System.out::println);
 
-        int specialCount = 0;
+        long specialCount = getSpecialCount();
 
-        for (Product product : basket) {
-            System.out.println(product);
-            if (product.isSpecial()) {
-                specialCount++;
-            }
-        }
         System.out.println("Итого: " + getTotalPrice());
         System.out.println("Специальных товаров: " + specialCount);
     }
 
     // Метод проверки по имени  //
     public boolean checkProductName(String productName) {
-        for (Product product : basket) {
-            if (product.getProductName().equals(productName)) {
-                System.out.println("Товар найден");
-                return true;
-            }
+        boolean found = basket.values().stream()
+                .flatMap(List::stream)
+                .anyMatch(product -> product.getProductName().equals(productName));
+
+        if (found) {
+            System.out.println("Товар найден");
+        } else {
+            System.out.println("Товар не найден");
         }
-        System.out.println("Товар не найден");
-        return false;
+        return found;
     }
 
     // Метод очистки корзины //
@@ -89,7 +90,6 @@ public class ProductBasket {
 
     // Геттер для количества продуктов //
     public int getCount() {
-        return basket.size();
+        return count;
     }
-
 }

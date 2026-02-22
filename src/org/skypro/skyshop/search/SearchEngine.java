@@ -2,16 +2,16 @@ package org.skypro.skyshop.search;
 
 import org.skypro.skyshop.content.Searchable;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
 
-    private final List<Searchable> searchables;
+    private final Set<Searchable> searchables;
     private int count;
 
     public SearchEngine(int capacity) {
-        this.searchables = new LinkedList<>();
+        this.searchables = new HashSet<>();
         this.count = 0;
     }
 
@@ -21,33 +21,50 @@ public class SearchEngine {
             System.out.println("Нельзя добавить null объект");
             return;
         }
-        searchables.add(item);
-        count++;
-        System.out.println("Добавлен: " + item.getStringRepresentation());
+        if (searchables.add(item)) {
+            count++;
+            System.out.println("Добавлен: " + item.getStringRepresentation());
+        } else {
+            System.out.println("Объект с именем '" + item.getName() + "' уже существует в поисковом движке");
+        }
     }
 
     // Метод поиска
-    public List<Searchable> search(String query) {
+    public Set<Searchable> search(String query) {
         if (query == null || query.trim().isEmpty()) {
             System.out.println("Пустой запрос поиска");
-            return new LinkedList<>();
+            return new TreeSet<>(createComparator());
         }
 
-        List<Searchable> results = new LinkedList<>();
+        Set<Searchable> results = searchables.stream()
+                .filter(item -> {
+                    String searchTerm = item.getSearchTerm();
+                    return searchTerm != null && searchTerm.toLowerCase().contains(query.toLowerCase());
+                })
+                .collect(Collectors.toCollection(() -> new TreeSet<>(createComparator())));
 
-        for (Searchable item : searchables) {
-            String searchTerm = item.getSearchTerm();
-            if (searchTerm != null && searchTerm.toLowerCase().contains(query.toLowerCase())) {
-                results.add(item);
-                }
-            }
         System.out.println("По запросу '" + query + "' найдено: " + results.size() + " результатов");
         return results;
         }
 
+     // Метод для создания компаратора
+     private Comparator<Searchable> createComparator() {
+         return (o1, o2) -> {
+             int lengthCompare = Integer.compare(o2.getName().length(), o1.getName().length());
+
+             if (lengthCompare != 0) {
+                 return lengthCompare;
+             }
+
+             return o1.getName().compareTo(o2.getName());
+         };
+     }
+
+
 
     // Метод для получения количества добавленных элементов
     public int getCount() {
+
         return searchables.size();
     }
 
