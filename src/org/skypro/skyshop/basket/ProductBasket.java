@@ -35,14 +35,20 @@ public class ProductBasket {
 
     // Метод получения стоимости корзины //
     public int getTotalPrice() {
-        int total = 0;
-        for (List<Product> productList : basket.values()) {
-            for (Product product : productList) {
-                total = total + product.getProductPrice();
-            }
-        }
+        int total = basket.values().stream()
+                .flatMap(List::stream)
+                .mapToInt(Product::getProductPrice)
+                .sum();
         System.out.println("Стоимость корзины: " + total);
         return total;
+    }
+
+    // Метод для подсчета специальных товаров //
+    private long getSpecialCount() {
+        return basket.values().stream()
+                .flatMap(List::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     // Метод печати содержимого корзины //
@@ -51,31 +57,28 @@ public class ProductBasket {
             System.out.println("В корзине пусто");
             return;
         }
+        basket.values().stream()
+                .flatMap(List::stream)
+                .forEach(System.out::println);
 
-        int specialCount = 0;
+        long specialCount = getSpecialCount();
 
-        for (List<Product> productList : basket.values()) {
-            for (Product product : productList) {
-                System.out.println(product);
-                if (product.isSpecial()) {
-                    specialCount++;
-                }
-            }
-        }
         System.out.println("Итого: " + getTotalPrice());
         System.out.println("Специальных товаров: " + specialCount);
     }
 
     // Метод проверки по имени  //
     public boolean checkProductName(String productName) {
+        boolean found = basket.values().stream()
+                .flatMap(List::stream)
+                .anyMatch(product -> product.getProductName().equals(productName));
 
-        if (basket.containsKey(productName)) {
-                System.out.println("Товар найден");
-                return true;
-
+        if (found) {
+            System.out.println("Товар найден");
+        } else {
+            System.out.println("Товар не найден");
         }
-        System.out.println("Товар не найден");
-        return false;
+        return found;
     }
 
     // Метод очистки корзины //

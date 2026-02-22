@@ -3,6 +3,7 @@ package org.skypro.skyshop.search;
 import org.skypro.skyshop.content.Searchable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
 
@@ -35,14 +36,13 @@ public class SearchEngine {
             return new TreeSet<>(createComparator());
         }
 
-        Set<Searchable> results = new TreeSet<>(createComparator());
+        Set<Searchable> results = searchables.stream()
+                .filter(item -> {
+                    String searchTerm = item.getSearchTerm();
+                    return searchTerm != null && searchTerm.toLowerCase().contains(query.toLowerCase());
+                })
+                .collect(Collectors.toCollection(() -> new TreeSet<>(createComparator())));
 
-        for (Searchable item : searchables) {
-            String searchTerm = item.getSearchTerm();
-            if (searchTerm != null && searchTerm.toLowerCase().contains(query.toLowerCase())) {
-                results.add(item);
-                }
-            }
         System.out.println("По запросу '" + query + "' найдено: " + results.size() + " результатов");
         return results;
         }
